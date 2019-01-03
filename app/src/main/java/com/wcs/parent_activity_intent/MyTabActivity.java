@@ -21,10 +21,6 @@ import com.elyot.parent_activity_intent.R;
 
 public class MyTabActivity extends AppCompatActivity {
 
-    static int mCurrentPosition = 1;
-
-    static Activity activity;
-
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -57,14 +53,7 @@ public class MyTabActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById( R.id.tabs );
 
         mViewPager.addOnPageChangeListener( new TabLayout.TabLayoutOnPageChangeListener( tabLayout ) );
-        tabLayout.addOnTabSelectedListener( new TabLayout.ViewPagerOnTabSelectedListener( mViewPager ){
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mCurrentPosition = 1 + tab.getPosition();
-                super.onTabSelected( tab );
-            }
-        });
-        activity = this;
+        tabLayout.addOnTabSelectedListener( new TabLayout.ViewPagerOnTabSelectedListener( mViewPager ));
     }
 
     @Override
@@ -115,17 +104,18 @@ public class MyTabActivity extends AppCompatActivity {
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+        public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                                  Bundle savedInstanceState) {
             final View rootView = inflater.inflate( R.layout.fragment_my_tab, container, false );
             final Button button = rootView.findViewById( R.id.tabBtn );
             button.setOnClickListener( new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    ViewPager viewPager = (ViewPager) container;
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra("tab_index", String.valueOf( mCurrentPosition));
-                    activity.setResult(Activity.RESULT_OK, returnIntent);
-                    activity.finish();
+                    returnIntent.putExtra("tab_index", "FROM  TAB " + String.valueOf( 1 + viewPager.getCurrentItem()));
+                    getActivity().setResult(Activity.RESULT_OK, returnIntent);
+                    getActivity().finish();
                 }
             });
 
